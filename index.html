@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Romantasy — Nouvelles sorties</title>
+<meta name="description" content="Catalogue automatique des nouvelles sorties et sorties à venir en romantasy." />
+<link rel="manifest" href="manifest.json" />
+<meta name="theme-color" content="#120A18" />
+<link rel="icon" href="icons/icon-192.png" />
+<link rel="apple-touch-icon" href="icons/icon-512.png" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="Romantasy" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Cormorant+Garamond:ital,wght@0,500;1,500;1,600&family=Source+Sans+3:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #120A18;
+    --ink-light: #1D1024;
+    --ink-lighter: #281731;
+    --parchment: #F1E9DA;
+    --parchment-dim: #C9BCD6;
+    --parchment-muted: #9686AC;
+    --gilt: #C9A227;
+    --gilt-bright: #E4C558;
+    --wine: #8B2942;
+    --wine-bright: #B23A58;
+  }
+
+  * { box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    margin: 0;
+    background-color: var(--ink);
+    background-image: radial-gradient(ellipse 120% 80% at 50% -10%, rgba(201,162,39,0.14), transparent 60%);
+    color: var(--parchment);
+    font-family: "Source Sans 3", system-ui, sans-serif;
+  }
+
+  .font-display { font-family: "Cinzel", serif; }
+  .font-accent { font-family: "Cormorant Garamond", serif; font-style: italic; }
+
+  header.hero {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 80px 24px 56px;
+    text-align: center;
+  }
+
+  header.hero .eyebrow {
+    font-size: 18px;
+    color: var(--gilt);
+    margin: 0;
+  }
+
+  header.hero h1 {
+    font-size: 42px;
+    line-height: 1.15;
+    margin: 8px 0 0;
+  }
+
+  header.hero p {
+    max-width: 560px;
+    margin: 16px auto 0;
+    color: var(--parchment-dim);
+    font-size: 15px;
+    line-height: 1.5;
+  }
+
+  .hero-link {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 10px 18px;
+    border: 1px solid var(--gilt);
+    border-radius: 2px;
+    color: var(--gilt-bright);
+    text-decoration: none;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    transition: background-color 0.2s, color 0.2s;
+  }
+
+  .hero-link:hover {
+    background-color: var(--gilt);
+    color: var(--ink);
+  }
+
+  .torn-edge {
+    height: 14px;
+    width: 100%;
+    background:
+      linear-gradient(-135deg, var(--ink) 8px, transparent 0),
+      linear-gradient(135deg, var(--ink) 8px, transparent 0);
+    background-size: 16px 16px;
+    background-position: bottom;
+    background-repeat: repeat-x;
+  }
+
+  .filters {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: rgba(18, 10, 24, 0.95);
+    backdrop-filter: blur(6px);
+    border-bottom: 1px solid rgba(201, 162, 39, 0.2);
+  }
+
+  .filters-inner {
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 16px 24px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .filters input,
+  .filters select {
+    background: var(--ink-light);
+    border: 1px solid rgba(201, 162, 39, 0.25);
+    color: var(--parchment);
+    border-radius: 2px;
+    padding: 8px 10px;
+    font-family: inherit;
+    font-size: 13px;
+  }
+
+  .filters input { width: 220px; }
+  .filters input::placeholder { color: var(--parchment-muted); }
+  .filters input:focus, .filters select:focus {
+    outline: none;
+    border-color: var(--gilt);
+    box-shadow: 0 0 0 1px var(--gilt);
+  }
+
+  .search-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .booknode-search-link {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: var(--gilt);
+    text-decoration: none;
+    white-space: nowrap;
+    border: 1px solid rgba(201, 162, 39, 0.35);
+    border-radius: 2px;
+    padding: 8px 10px;
+  }
+
+  .booknode-search-link:hover { color: var(--gilt-bright); border-color: var(--gilt); }
+
+  button.booknode-search-link {
+    background: transparent;
+    cursor: pointer;
+    font-family: inherit;
+  }
+
+  .booknode-embed {
+    display: none;
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 0 24px 24px;
+  }
+
+  .booknode-embed.open { display: block; }
+
+  .booknode-embed p {
+    font-size: 12px;
+    color: var(--parchment-muted);
+    margin: 0 0 8px;
+  }
+
+  .booknode-embed iframe {
+    width: 100%;
+    height: 600px;
+    border: 1px solid rgba(201, 162, 39, 0.25);
+    border-radius: 2px;
+    background: var(--ink-light);
+  }
+
+  .filters-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--parchment-muted);
+  }
+
+  main {
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 40px 24px;
+  }
+
+  .status-msg {
+    text-align: center;
+    padding: 64px 0;
+    font-family: "Cormorant Garamond", serif;
+    font-style: italic;
+    font-size: 18px;
+    color: var(--parchment-muted);
+  }
+
+  .status-msg.error { color: var(--wine-bright); font-family: inherit; font-style: normal; font-size: 14px; }
+
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  @media (min-width: 640px) {
+    .grid { grid-template-columns: 1fr 1fr; }
+  }
+
+  .card {
+    position: relative;
+    background: var(--ink-light);
+    border: 1px solid rgba(201, 162, 39, 0.18);
+    border-radius: 2px;
+    padding: 16px;
+    transition: border-color 0.3s;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .card:hover { border-color: rgba(201, 162, 39, 0.45); }
+
+  .card-top { display: flex; gap: 16px; }
+
+  .cover {
+    width: 80px;
+    flex-shrink: 0;
+  }
+
+  .cover img {
+    width: 100%;
+    border-radius: 2px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.4);
+    display: block;
+  }
+
+  .cover-placeholder {
+    aspect-ratio: 2 / 3;
+    width: 100%;
+    background: var(--ink-lighter);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-size: 10px;
+    color: var(--parchment-muted);
+    border-radius: 2px;
+    padding: 4px;
+  }
+
+  .card-body {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .card-body h3 {
+    font-size: 16px;
+    line-height: 1.35;
+    margin: 0;
+  }
+
+  .card-body .subtitle {
+    margin: 3px 0 0;
+    font-size: 14px;
+    color: var(--parchment-dim);
+  }
+
+  .card-body .authors {
+    margin: 6px 0 0;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--gilt);
+  }
+
+  .card-body .meta {
+    margin-top: auto;
+    padding-top: 12px;
+    font-size: 12px;
+    color: var(--parchment-muted);
+  }
+
+  .lang-tag {
+    margin-left: 8px;
+    border: 1px solid rgba(150, 134, 172, 0.3);
+    padding: 1px 6px;
+    border-radius: 2px;
+    font-size: 10px;
+    text-transform: uppercase;
+  }
+
+  .description {
+    margin: 12px 0 0;
+    font-size: 14px;
+    color: var(--parchment-dim);
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .links-row {
+    margin-top: 12px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 16px;
+  }
+
+  .links-row a {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    text-decoration: none;
+  }
+
+  .link-info { color: var(--wine-bright); }
+  .link-info:hover { color: var(--gilt-bright); }
+  .link-marketplace { color: var(--gilt); }
+  .link-marketplace:hover { color: var(--gilt-bright); }
+  .links-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: var(--parchment-muted);
+  }
+
+  .wax-seal {
+    position: absolute;
+    top: -14px;
+    right: 18px;
+    width: 52px;
+    height: 52px;
+    border-radius: 999px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: "Cinzel", serif;
+    font-size: 9px;
+    letter-spacing: 0.06em;
+    text-align: center;
+    line-height: 1.1;
+    color: var(--parchment);
+    box-shadow: 0 3px 8px rgba(0,0,0,0.45), inset 0 0 0 1px rgba(241,233,218,0.25);
+    transform: rotate(-6deg);
+  }
+
+  .wax-seal::before {
+    content: "";
+    position: absolute;
+    inset: -3px;
+    border-radius: 999px;
+    border: 1px dashed rgba(241, 233, 218, 0.35);
+  }
+
+  .wax-seal.new {
+    background: radial-gradient(circle at 35% 30%, #B23A58, #5E1B2E 75%);
+  }
+
+  .wax-seal.soon {
+    background: radial-gradient(circle at 35% 30%, #D9B23F, #8A701F 75%);
+    color: #1D1024;
+  }
+
+  footer {
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 24px 24px 48px;
+    text-align: center;
+    font-size: 12px;
+    color: var(--parchment-muted);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { transition-duration: 0.001ms !important; }
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <p class="eyebrow font-accent">Le grimoire des parutions</p>
+  <h1 class="font-display">Romantasy — nouvelles sorties</h1>
+  <p>Un catalogue qui veille sur les rayons pour vous : dragons, cours féeriques et ennemis-amants, classés par date de parution, mis à jour automatiquement.</p>
+  <a class="hero-link" href="https://booknode.com/dates_de_sortie" target="_blank" rel="noopener noreferrer">Voir le calendrier des sorties françaises sur Booknode ↗</a>
+</header>
+
+<div class="torn-edge"></div>
+
+<div class="filters">
+  <div class="filters-inner">
+    <div class="search-group">
+      <input id="search" type="text" autocomplete="off" placeholder="Chercher un titre, une autrice..." />
+      <a id="booknode-search-link" class="booknode-search-link" href="https://booknode.com/dates_de_sortie" target="_blank" rel="noopener noreferrer">Booknode ↗</a>
+      <button id="booknode-toggle" class="booknode-search-link" type="button">Afficher ici ↓</button>
+      <a id="amazon-search-link" class="booknode-search-link" href="https://www.amazon.fr/s" target="_blank" rel="noopener noreferrer">Amazon ↗</a>
+      <a id="leboncoin-search-link" class="booknode-search-link" href="https://www.leboncoin.fr/recherche" target="_blank" rel="noopener noreferrer">Leboncoin ↗</a>
+      <a id="vinted-search-link" class="booknode-search-link" href="https://www.vinted.fr/catalog" target="_blank" rel="noopener noreferrer">Vinted ↗</a>
+    </div>
+    <div class="filters-right">
+      <select id="language">
+        <option value="all">Toutes langues</option>
+        <option value="fr">Français</option>
+        <option value="en">Anglais</option>
+      </select>
+      <select id="sort">
+        <option value="newest">Plus récents</option>
+        <option value="title">Titre A→Z</option>
+      </select>
+      <span id="count">0 titre</span>
+    </div>
+  </div>
+</div>
+
+<div id="booknode-embed" class="booknode-embed">
+  <p>Calendrier des sorties affiché directement depuis booknode.com. Si le cadre reste vide, c'est que leur site bloque l'affichage en iframe — dans ce cas, utilise le bouton "Booknode ↗" à côté.</p>
+  <iframe id="booknode-iframe" src="" title="Résultats Booknode" loading="lazy"></iframe>
+</div>
+
+<main>
+  <div id="status" class="status-msg">Consultation des archives en cours...</div>
+  <div id="grid" class="grid" style="display:none;"></div>
+</main>
+
+<footer>Données fournies par l'API Open Library (Internet Archive) · Rafraîchies à chaque visite</footer>
+
+<script>
+// ---- Config -----------------------------------------------------------
+// Data source: Open Library (an Internet Archive project). Its search API
+// is fully public — no API key, no account, no card, ever required.
+// https://openlibrary.org/dev/docs/api/search
+
+const SEARCH_TERMS = [
+  "romantasy",
+  "fantasy romance",
+  // French-specific queries — without these, results skew almost
+  // entirely English since the terms above are English phrases.
+  "language:fre fantasy romance",
+  "bit-lit", // the French genre term for paranormal/fantasy romance
+  // Targeting French imprints that specialize in this genre directly,
+  // since Open Library's catalog of recent French translations is thin —
+  // this may still return little, which reflects a real data gap on
+  // Open Library's side rather than a query problem.
+  "language:fre publisher:(Milady OR \"De Saxus\" OR \"City Éditions\" OR Castelmore)",
+];
+
+// Thematic keyword search alone misses well-known authors whose book
+// descriptions don't happen to contain the word "romantasy" (Sarah J. Maas
+// being the classic example). This explicitly pulls in a curated list of
+// major romantasy authors via one combined query on the "author_name"
+// field (the actual Solr schema field — an earlier version used the
+// invalid field name "author", and a later version split this into 10
+// separate requests, which was overloading the CORS proxy).
+const KNOWN_AUTHORS = [
+  "Sarah J. Maas",
+  "Jennifer L. Armentrout",
+  "Rebecca Yarros",
+  "Sarah A. Parker",
+  "Carissa Broadbent",
+  "Danielle L. Jensen",
+  "Raven Kennedy",
+  "Elise Kova",
+  "Laura Thalassa",
+  "Holly Black",
+];
+const AUTHOR_QUERY = `author_name:(${KNOWN_AUTHORS.map((n) => `"${n}"`).join(" OR ")})`;
+
+const MONTHS = ["janv.", "févr.", "mars", "avr.", "mai", "juin", "juil.", "août", "sept.", "oct.", "nov.", "déc."];
+
+// ---- Fetching & normalizing --------------------------------------------
+
+// Open Library returns ISO 639-2 (3-letter) codes like "fre"/"eng", but the
+// filter dropdown uses 2-letter codes — without this mapping, selecting a
+// language always matched zero books.
+const LANGUAGE_CODE_MAP = {
+  fre: "fr", eng: "en", spa: "es", ger: "de", ita: "it",
+  por: "pt", dut: "nl", jpn: "ja", chi: "zh",
+};
+
+function normalizeLanguage(code) {
+  if (!code) return null;
+  return LANGUAGE_CODE_MAP[code] || code;
+}
+
+function normalizeDoc(doc) {
+  const year = doc.first_publish_year || null;
+  // Open Library lists ALL languages a work has editions in (e.g.
+  // ["eng","fre"]), not just one — keep the full list so the language
+  // filter can match French even when it's not the first entry.
+  const languages = Array.isArray(doc.language)
+    ? doc.language.map(normalizeLanguage).filter(Boolean)
+    : [];
+
+  return {
+    id: doc.key,
+    title: doc.title || "Titre inconnu",
+    subtitle: doc.subtitle || null,
+    authors: doc.author_name || [],
+    publishedDate: year ? String(year) : null,
+    publishedYear: year,
+    description: Array.isArray(doc.first_sentence) ? doc.first_sentence[0] : (doc.first_sentence || null),
+    thumbnail: doc.cover_i ? `https://covers.openlibrary.org/b/id/${doc.cover_i}-M.jpg` : null,
+    languages,
+    language: languages[0] || null,
+    infoLink: doc.key ? `https://openlibrary.org${doc.key}` : null,
+    categories: doc.subject ? doc.subject.slice(0, 6) : [],
+  };
+}
+
+// Open Library's search.json endpoint doesn't send CORS headers, which
+// blocks a direct browser fetch from a page opened via file://. We try the
+// direct call first (works fine once the site is hosted on a real domain
+// with a server-side proxy, or if Open Library adds CORS later) and fall
+// back to a free public CORS proxy so the plain HTML file still works with
+// zero setup, no key, no account.
+async function fetchJson(url) {
+  try {
+    const res = await fetch(url);
+    if (res.ok) return await res.json();
+  } catch {
+    // likely a CORS block — fall through to the proxy
+  }
+
+  const proxied = `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`;
+  const res = await fetch(proxied);
+  if (!res.ok) throw new Error(`Proxy fetch failed: ${res.status}`);
+  return await res.json();
+}
+
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+async function fetchRomantasyBooks() {
+  const merged = [];
+
+  // Each entry: [paramName, value, limit]. Genre queries and the combined
+  // author query both use the free-text `q` param.
+  const queries = [
+    ...SEARCH_TERMS.map((term) => ["q", term, "100"]),
+    ["q", AUTHOR_QUERY, "100"],
+  ];
+
+  // Sequential with a short pause between calls, staying close to Open
+  // Library's default limit of 1 request/second for unidentified requests.
+  for (let i = 0; i < queries.length; i++) {
+    const [paramName, value, limit] = queries[i];
+    const params = new URLSearchParams({
+      [paramName]: value,
+      sort: "new",
+      limit,
+      fields: "key,title,subtitle,author_name,first_publish_year,cover_i,language,first_sentence,subject",
+    });
+
+    try {
+      const data = await fetchJson(`https://openlibrary.org/search.json?${params.toString()}`);
+      merged.push(...(data.docs || []).map(normalizeDoc));
+    } catch {
+      // this query failed entirely (proxy down, network issue...) — skip it
+    }
+
+    if (i < queries.length - 1) await sleep(1100);
+  }
+
+  const deduped = new Map();
+  for (const book of merged) {
+    if (!deduped.has(book.id) && book.title !== "Titre inconnu") deduped.set(book.id, book);
+  }
+
+  return Array.from(deduped.values())
+    .sort((a, b) => (b.publishedYear || 0) - (a.publishedYear || 0));
+}
+
+
+// ---- Rendering ----------------------------------------------------------
+
+function formatDate(dateStr) {
+  if (!dateStr) return "Date inconnue";
+  const parts = dateStr.split("-");
+  if (parts.length === 1) return parts[0];
+  if (parts.length === 2) return `${MONTHS[parseInt(parts[1], 10) - 1]} ${parts[0]}`;
+  return `${parseInt(parts[2], 10)} ${MONTHS[parseInt(parts[1], 10) - 1]} ${parts[0]}`;
+}
+
+function sealFor(year) {
+  if (!year) return null;
+  const currentYear = new Date().getFullYear();
+  if (year > currentYear) return { text: "À paraître", variant: "soon" };
+  if (year === currentYear) return { text: "Nouveauté", variant: "new" };
+  return null;
+}
+
+function marketplaceQuery(book) {
+  return [book.title, book.authors[0]].filter(Boolean).join(" ");
+}
+
+function leboncoinUrl(book) {
+  const params = new URLSearchParams({ text: marketplaceQuery(book), category: "livres", sort: "price-asc" });
+  return `https://www.leboncoin.fr/recherche?${params.toString()}`;
+}
+
+function vintedUrl(book) {
+  const params = new URLSearchParams({ search_text: marketplaceQuery(book), order: "price_low_to_high" });
+  return `https://www.vinted.fr/catalog?${params.toString()}`;
+}
+
+function booknodeUrl(book) {
+  const params = new URLSearchParams({ q: marketplaceQuery(book) });
+  return `https://booknode.com/search?${params.toString()}`;
+}
+
+function amazonUrl(book) {
+  const params = new URLSearchParams({ k: marketplaceQuery(book), i: "stripbooks" });
+  return `https://www.amazon.fr/s?${params.toString()}`;
+}
+
+function escapeHtml(str) {
+  const div = document.createElement("div");
+  div.textContent = str ?? "";
+  return div.innerHTML;
+}
+
+function bookCardHtml(book) {
+  const seal = sealFor(book.publishedYear);
+  const coverHtml = book.thumbnail
+    ? `<img src="${escapeHtml(book.thumbnail)}" alt="Couverture de ${escapeHtml(book.title)}" loading="lazy" />`
+    : `<div class="cover-placeholder font-display">Pas de couverture</div>`;
+
+  return `
+    <article class="card">
+      ${seal ? `<span class="wax-seal ${seal.variant}">${seal.text}</span>` : ""}
+      <div class="card-top">
+        <div class="cover">${coverHtml}</div>
+        <div class="card-body">
+          <h3 class="font-display">${escapeHtml(book.title)}</h3>
+          ${book.subtitle ? `<p class="subtitle font-accent">${escapeHtml(book.subtitle)}</p>` : ""}
+          <p class="authors">${book.authors.length ? escapeHtml(book.authors.join(", ")) : "Auteur·rice inconnu·e"}</p>
+          <p class="meta">${formatDate(book.publishedDate)}${book.language ? `<span class="lang-tag">${escapeHtml(book.language)}</span>` : ""}</p>
+        </div>
+      </div>
+      ${book.description ? `<p class="description">${escapeHtml(book.description)}</p>` : ""}
+      <div class="links-row">
+        ${book.infoLink ? `<a class="link-info" href="${escapeHtml(book.infoLink)}" target="_blank" rel="noopener noreferrer">Voir la fiche →</a>` : ""}
+        <a class="link-info" href="${booknodeUrl(book)}" target="_blank" rel="noopener noreferrer">Booknode ↗</a>
+        <a class="link-info" href="${amazonUrl(book)}" target="_blank" rel="noopener noreferrer">Amazon ↗</a>
+        <span class="links-label">Occasion :</span>
+        <a class="link-marketplace" href="${leboncoinUrl(book)}" target="_blank" rel="noopener noreferrer">Leboncoin ↗</a>
+        <a class="link-marketplace" href="${vintedUrl(book)}" target="_blank" rel="noopener noreferrer">Vinted ↗</a>
+      </div>
+    </article>
+  `;
+}
+
+// ---- App state & filtering ----------------------------------------------
+
+let allBooks = [];
+
+const els = {
+  status: document.getElementById("status"),
+  grid: document.getElementById("grid"),
+  search: document.getElementById("search"),
+  language: document.getElementById("language"),
+  sort: document.getElementById("sort"),
+  count: document.getElementById("count"),
+  booknodeLink: document.getElementById("booknode-search-link"),
+  booknodeToggle: document.getElementById("booknode-toggle"),
+  booknodeEmbed: document.getElementById("booknode-embed"),
+  booknodeIframe: document.getElementById("booknode-iframe"),
+  amazonLink: document.getElementById("amazon-search-link"),
+  leboncoinLink: document.getElementById("leboncoin-search-link"),
+  vintedLink: document.getElementById("vinted-search-link"),
+};
+
+function updateSearchBarLinks() {
+  const q = els.search.value.trim();
+
+  // Booknode button/embed intentionally do NOT follow the search box —
+  // they always point to the release calendar, per request.
+  els.amazonLink.href = `https://www.amazon.fr/s?${new URLSearchParams(q ? { k: q, i: "stripbooks" } : { i: "stripbooks" }).toString()}`;
+  els.leboncoinLink.href = `https://www.leboncoin.fr/recherche?${new URLSearchParams(q ? { text: q, category: "livres", sort: "price-asc" } : { category: "livres", sort: "price-asc" }).toString()}`;
+  els.vintedLink.href = `https://www.vinted.fr/catalog?${new URLSearchParams(q ? { search_text: q, order: "price_low_to_high" } : { order: "price_low_to_high" }).toString()}`;
+}
+
+els.booknodeToggle.addEventListener("click", () => {
+  const isOpen = els.booknodeEmbed.classList.toggle("open");
+  els.booknodeToggle.textContent = isOpen ? "Masquer ↑" : "Afficher ici ↓";
+  els.booknodeIframe.src = isOpen ? "https://booknode.com/dates_de_sortie" : "";
+});
+
+function applyFiltersAndRender() {
+  updateSearchBarLinks();
+  let list = [...allBooks];
+
+  const lang = els.language.value;
+  if (lang !== "all") list = list.filter((b) => b.languages && b.languages.includes(lang));
+
+  const q = els.search.value.trim().toLowerCase();
+  if (q) {
+    list = list.filter((b) =>
+      b.title.toLowerCase().includes(q) ||
+      b.authors.some((a) => a.toLowerCase().includes(q))
+    );
+  }
+
+  if (els.sort.value === "title") {
+    list.sort((a, b) => a.title.localeCompare(b.title));
+  } else {
+    list.sort((a, b) => (b.publishedYear || 0) - (a.publishedYear || 0));
+  }
+
+  els.count.textContent = `${list.length} titre${list.length === 1 ? "" : "s"}`;
+
+  if (list.length === 0) {
+    els.status.style.display = "block";
+    els.status.className = "status-msg";
+    els.status.innerHTML = `Aucun titre ne correspond à cette recherche. <a href="#" id="reset-filters" style="color: var(--gilt); text-decoration: underline;">Réinitialiser les filtres</a>`;
+    els.grid.style.display = "none";
+    const resetLink = document.getElementById("reset-filters");
+    if (resetLink) {
+      resetLink.addEventListener("click", (e) => {
+        e.preventDefault();
+        els.search.value = "";
+        els.language.value = "all";
+        els.sort.value = "newest";
+        applyFiltersAndRender();
+      });
+    }
+    return;
+  }
+
+  els.status.style.display = "none";
+  els.grid.style.display = "grid";
+  els.grid.innerHTML = list.map(bookCardHtml).join("");
+}
+
+[els.search, els.language, els.sort].forEach((el) =>
+  el.addEventListener("input", applyFiltersAndRender)
+);
+
+async function init() {
+  // Some browsers restore previous form field values on reload for
+  // file:// pages, which can silently filter everything out on the
+  // very first load. Force known-good defaults before rendering.
+  els.search.value = "";
+  els.language.value = "all";
+  els.sort.value = "newest";
+
+  try {
+    allBooks = await fetchRomantasyBooks();
+    if (allBooks.length === 0) {
+      els.status.textContent = "Aucun titre trouvé pour le moment. Réessayez plus tard.";
+      return;
+    }
+    applyFiltersAndRender();
+  } catch (err) {
+    els.status.className = "status-msg error";
+    els.status.textContent = "Les archives sont injoignables pour le moment. Réessayez dans un instant.";
+  }
+}
+
+init();
+
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("service-worker.js").catch(() => {
+      // Non-critical — the app still works fully without it, just
+      // without the offline app-shell cache and install prompt polish.
+    });
+  });
+}
+</script>
+</body>
+</html>
